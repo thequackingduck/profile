@@ -186,13 +186,13 @@
 </style>
 <body><!-- set class="dark" on body tag for DARK-THEME -->
 
-  <div class="preloader">
+  <!-- <div class="preloader">
     <div class="loading-mask"></div>
     <div class="loading-mask"></div>
     <div class="loading-mask"></div>
     <div class="loading-mask"></div>
     <div class="loading-mask"></div>
-  </div>
+  </div> -->
 
   
     <div class="pt-table">
@@ -288,40 +288,39 @@
             
               <form id="contact-form" class="row contact-form no-gutter">
                 <div class="col-xs-12 col-sm-6">
-                  <div class="input-field name">
-                    <span class="input-icon" id="name"><i class="tf-profile-male"></i></span>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
-                  </div>
+                    <div class="input-field name">
+                        <span class="input-icon"><i class="tf-profile-male"></i></span>
+                        <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
+                    </div>
                 </div> <!-- ./col- -->
                 <div class="col-xs-12 col-sm-6">
-                  <div class="input-field email">
-                    <span class="input-icon" id="email"><i class="tf-envelope2"></i></span>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Your email address" required>
-                  </div>
+                    <div class="input-field email">
+                        <span class="input-icon"><i class="tf-envelope2"></i></span>
+                        <input type="email" class="form-control" id="emailInput" placeholder="Enter your email address">
+                    </div>
                 </div> <!-- ./col- -->
                 <div class="col-xs-12 col-sm-12">
-                  <div class="input-field">
-                    <span class="input-icon" id="subject"><i class="tf-pricetags"></i></span>
-                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Enter the discussion title" required>
-                  </div>
+                    <div class="input-field">
+                        <span class="input-icon"><i class="tf-pricetags"></i></span>
+                        <input type="text" class="form-control" id="subjectInput" placeholder="Enter the discussion title">
+                    </div>
                 </div> <!-- ./col- -->
                 <div class="col-xs-12 col-sm-12">
-                  <div class="input-field message">
-                    <span class="input-icon"><i class="tf-pencil2"></i></span>
-                    <textarea name="message" id="message" class="form-control"
-                      placeholder="Write your message" required></textarea>
-                  </div>
+                    <div class="input-field message">
+                        <span class="input-icon"><i class="tf-pencil2"></i></span>
+                        <textarea name="message" id="messageInput" class="form-control" placeholder="Write your message"></textarea>
+                    </div>
                 </div> <!-- ./col- -->
                 <div class="col-xs-12 col-sm-12">
-                  <div class="input-field">
-                    <span class="btn-border">
-                      <button type="button" class="btn btn-primary btn-custom-border text-uppercase">Send Message now</button>
-                    </span>
-                  </div>
-                  <div class="msg-success" style="font-family: 'Poppins'; color: white; font-size: 20px;">Your message was sent successfully!</div>
-                  <div class="msg-failed" style="font-family: 'Poppins'; color: white; font-size: 20px;">Something went wrong, please try again later.</div>
+                    <div class="input-field">
+                        <span class="btn-border">
+                            <button type="submit" class="btn btn-primary btn-custom-border text-uppercase">Send Message now</button>
+                        </span>
+                    </div>
                 </div> <!-- ./col- -->
-              </form> <!-- /.row -->
+            </form> <!-- /.row -->
+            
+              
             </div> <!-- /.col- -->
             
              
@@ -360,68 +359,51 @@ Essential Scripts
 <script src="plugins/jquery.nicescroll.min.js"></script>
 <script src="plugins/isotope/isotope.pkgd.min.js"></script>
 <script src="plugins/slick/slick.min.js"></script>
-
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="js/script.js"></script>
+
 <script>
-function sendEmail() {
-  // Get form values
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const subject = document.getElementById("subject").value.trim();
-  const message = document.getElementById("message").value.trim();
 
-  // Check if all fields are filled
-  if (name === "" || email === "" || subject === "" || message === "") {
-    alert("Please fill in all fields");
-    return;
-  }
+// Get form data
+const nameInput = document.getElementById("nameInput");
+const emailInput = document.getElementById("emailInput");
+const subjectInput = document.getElementById("subjectInput");
+const messageInput = document.getElementById("messageInput");
+const submit = document.getElementById("contact-form");
 
-  // Create a FormData object to send data as multipart/form-data
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("email", email);
-  formData.append("subject", subject);
-  formData.append("message", message);
+submit.addEventListener('submit', (e) => {
+    e.preventDefault();
+    console.log("Clicked");
 
-  // Send POST request to email.php file
-  fetch("email.php", {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => {
-      if (response.ok) {
-        // Display success message
-        const successMsg = document.querySelector(".msg-success");
-        successMsg.style.display = "block";
-        successMsg.textContent = "Your message was sent successfully!";
-        // Reset form fields
-        document.getElementById("name").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("subject").value = "";
-        document.getElementById("message").value = "";
-      } else {
-        // Display error message
-        const errorMsg = document.querySelector(".msg-failed");
-        errorMsg.style.display = "block";
-        errorMsg.textContent = "Something went wrong, please try again later.";
-      }
-    })
-    .catch((error) => {
-      // Display error message
-      const errorMsg = document.querySelector(".msg-failed");
-      errorMsg.style.display = "block";
-      errorMsg.textContent = "Something went wrong, please try again later.";
-      console.error(error);
-    });
-}
+    let ebody = `
+  <div>
+    <p><strong>Name: </strong><span>${nameInput.value}</span></p>
+    <p><strong>Email: </strong><span>${emailInput.value}</span></p>
+    <p><strong>Message: </strong><span>${messageInput.value}</span></p>
+  </div>
+  
+  `;
 
-// Attach submit event listener to form
-document.getElementById("contact-form").addEventListener("submit", (event) => {
-  event.preventDefault(); // Prevent default form submission behavior
-  sendEmail();
+    // Send the email using Email.js
+    Email.send({
+        SecureToken: "c2825628-fd05-4a04-97ee-189025ac9697",
+        To: 'justinlomodcorpuz0626@gmail.com',
+        From: 'justinlomodcorpuz0626@gmail.com',
+        Subject: subjectInput.value,
+        Body: ebody
+    }).then(
+        message => {
+            swal({
+                title: "Success!",
+                text: "Message sent successfully!",
+                icon: "success",
+                button: "OK!",
+            });
+            // You can also reset the form fields here if needed
+            document.querySelector('form').reset();
+        })
 });
-
-
 
 </script>
 
