@@ -290,25 +290,25 @@
                 <div class="col-xs-12 col-sm-6">
                     <div class="input-field name">
                         <span class="input-icon"><i class="tf-profile-male"></i></span>
-                        <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
+                        <input type="text" class="form-control" id="contact-name" placeholder="Enter your name">
                     </div>
                 </div> <!-- ./col- -->
                 <div class="col-xs-12 col-sm-6">
                     <div class="input-field email">
                         <span class="input-icon"><i class="tf-envelope2"></i></span>
-                        <input type="email" class="form-control" id="emailInput" placeholder="Enter your email address">
+                        <input type="email" class="form-control" id="contact-email" placeholder="Enter your email address">
                     </div>
                 </div> <!-- ./col- -->
                 <div class="col-xs-12 col-sm-12">
                     <div class="input-field">
                         <span class="input-icon"><i class="tf-pricetags"></i></span>
-                        <input type="text" class="form-control" id="subjectInput" placeholder="Enter the discussion title">
+                        <input type="text" class="form-control" id="contact-subject" placeholder="Enter the discussion title">
                     </div>
                 </div> <!-- ./col- -->
                 <div class="col-xs-12 col-sm-12">
                     <div class="input-field message">
                         <span class="input-icon"><i class="tf-pencil2"></i></span>
-                        <textarea name="message" id="messageInput" class="form-control" placeholder="Write your message"></textarea>
+                        <textarea name="message" id="contact-message" class="form-control" placeholder="Write your message"></textarea>
                     </div>
                 </div> <!-- ./col- -->
                 <div class="col-xs-12 col-sm-12">
@@ -363,50 +363,45 @@ Essential Scripts
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="js/script.js"></script>
 
-<script>
-
-// Get form data
-const nameInput = document.getElementById("nameInput");
-const emailInput = document.getElementById("emailInput");
-const subjectInput = document.getElementById("subjectInput");
-const messageInput = document.getElementById("messageInput");
-const submit = document.getElementById("contact-form");
-
-submit.addEventListener('submit', (e) => {
-    e.preventDefault();
-    console.log("Clicked");
-
-    let ebody = `
-  <div>
-    <p><strong>Name: </strong><span>${nameInput.value}</span></p>
-    <p><strong>Email: </strong><span>${emailInput.value}</span></p>
-    <p><strong>Message: </strong><span>${messageInput.value}</span></p>
-  </div>
-  
-  `;
-
-    // Send the email using Email.js
-    Email.send({
-        SecureToken: "c2825628-fd05-4a04-97ee-189025ac9697",
-        To: 'justinlomodcorpuz0626@gmail.com',
-        From: 'justinlomodcorpuz0626@gmail.com',
-        Subject: subjectInput.value,
-        Body: ebody
-    }).then(
-        message => {
-            swal({
-                title: "Success!",
-                text: "Message sent successfully!",
-                icon: "success",
-                button: "OK!",
-            });
-            // You can also reset the form fields here if needed
-            document.querySelector('form').reset();
-        })
-});
-
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+    (function() {
+        emailjs.init('liHvJrQ_IbUwfchVR');
+    })();
 </script>
 
+<script>
+  window.onload = function() {
+    document.getElementById('contact-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var templateParams = {
+        name: document.getElementById('contact-name').value,
+        email: document.getElementById('contact-email').value,
+        subject: document.getElementById('contact-subject').value,
+        message: document.getElementById('contact-message').value
+      };
+
+      emailjs.send("service_onmoutl","template_fop58tb", templateParams, "liHvJrQ_IbUwfchVR")
+        .then(function(response) {
+          swal({
+            title: "Sent Successfully!",
+            icon: "success",
+          }).then(function() {
+            // Reload the page after showing the success message
+            location.reload();
+          });
+          console.log('SUCCESS!', response.status, response.text);
+        }, function(error) {
+          swal({
+            title: "Send Failed",
+            icon: "error",
+          });
+          console.log('FAILED...', error);
+        });
+    });
+  };
+</script>
 
 </body>
 </html>
